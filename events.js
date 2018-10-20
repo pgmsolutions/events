@@ -1,9 +1,9 @@
-module.exports = {
     /** List of callbacks in the form of {event: string, func: function} */
-    _callbacks: [],
+var _callbacks = [],
     /** UID of each callbacks */
-    _nextCbID: 1,
+    _nextCbID = 1;
 
+var Events = {    
     /**
      * Sets up a new callback
      * @param event the name of the event
@@ -11,8 +11,8 @@ module.exports = {
      * @returns a UID of the callback
      */
     on: function(event, callback){
-        let uid = Events._nextCbID++;
-        Events._callbacks.push({id: uid, event: event, func: callback});
+        let uid = _nextCbID++;
+        _callbacks.push({id: uid, event: event, func: callback});
         return uid;
     },
 
@@ -25,9 +25,9 @@ module.exports = {
         let params = [];
         for(let i = 1; i < arguments.length; ++i)
             params.push(arguments[i]);
-        for(let i = 0; i < Events._callbacks.length; ++i)
-            if(Events._callbacks[i].event === event)
-                Events._callbacks[i].func.apply(this, params);
+        for(let i = 0; i < _callbacks.length; ++i)
+            if(_callbacks[i].event === event)
+                _callbacks[i].func.apply(this, params);
     },
 
     /**
@@ -35,7 +35,7 @@ module.exports = {
      * @param uid the UID of the event
      */
     off: function(uid){
-        Events._callbacks = Events._callbacks.filter(e => e.id !== uid);
+        _callbacks = _callbacks.filter(e => e.id !== uid);
     },
 
     /**
@@ -43,6 +43,8 @@ module.exports = {
      * @param eventName the name of the event
      */
     offAll: function(eventName){
-        Events._callbacks = Events._callbacks.filter(e => e.event !== eventName);
+        _callbacks = _callbacks.filter(e => e.event !== eventName);
     }
 };
+
+module.exports = Events;
